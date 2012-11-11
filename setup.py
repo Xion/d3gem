@@ -9,6 +9,8 @@ setup(
     name="d3gem",
     version="0.1",
     description="Diablo 3 gem crafting helper",
+    long_description=open('README.rst').read(),
+    url='https://github.com/Xion/d3gem',
     author='Karol Kuczmarski "Xion"',
     author_email='karol.kuczmarski@gmail.com',
     license="MIT",
