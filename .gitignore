@@ -1,2 +1,11 @@
 *.py[co]
+*.egg-info
+build
+dist
+eggs
+sdist
+develop-eggs
+.installed-cfg
+pip-log.txt
+
 *.ropeproject
