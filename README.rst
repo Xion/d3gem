@@ -3,9 +3,9 @@ d3gem
 
 For harnessing those Flawless Square Emeralds
 
----
+----
 
-_d3gem_ is a very simple utility tool for helping with Diablo 3 gem crafting.
+`d3gem` is a very simple utility tool for helping with Diablo 3 gem crafting.
 What it does is calculating whether you have enough lesser gems to make few greater ones,
 and how many you are missing (or will have left).
 
@@ -13,11 +13,11 @@ and how many you are missing (or will have left).
 Installation
 ------------
 
-Use _pip_ to get the ``d3gem`` command in your shell::
+Use *pip* to get the ``d3gem`` command in your shell::
 
     $ pip install d3gem
 
-Or just download the package and run ``d3gem.py`` directly.
+Or just download the package and run ``d3gem.py`` directly (e.g. with ``python ./d3gem.py``).
 
 
 Usage
