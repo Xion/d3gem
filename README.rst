@@ -39,8 +39,8 @@ you are still missing to perform your craft::
 
 or, alternatively, how many you'll have left::
 
-	$ d3gem 1st -s 20fsq,1rsq
-	You DO have enough lesser gems to make 1 Star gem(s).
+    $ d3gem 1st -s 20fsq,1rsq
+    You DO have enough lesser gems to make 1 Star gem(s).
     Afterwards you will still have the equivalent of 2 Flawless Square gem(s).
 
 Type ``d3gem --help`` to get the list of gem class abbrevations.
