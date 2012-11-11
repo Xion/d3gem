@@ -3,6 +3,7 @@
 d3gem -- For helping with Diablo 3 gem madness
 :author: Karol Kuczmarski "Xion"
 """
+import os
 import re
 import argparse
 
@@ -12,7 +13,11 @@ def main():
     parser = create_argument_parser()
     args = parser.parse_args()
 
+    # parse the target gem class and quantity
     target = parse_gem_cluster(args.target)
+    if len(target) > 1:
+        print "Sorry, you can only specify one class of target gems."
+        exit(1)
     target_class_name = gem_class_name(next(target.iterkeys()))
     target_quantity = next(target.itervalues())
 
@@ -59,33 +64,6 @@ def gem_class_name(ident):
     return next(name for class_, name in GEM_CLASSES if class_ == ident)
 
 
-def to_basic_gems(cluster):
-    """Returns a number of basic gems needed for given gem cluster.
-    :param cluster: Gem cluster (a dict)
-    """
-    res = 0
-    for class_, quantity in cluster.iteritems():
-        order = next(i for i, (c, _) in enumerate(GEM_CLASSES) if c == class_)
-        res += quantity * GEMS_PER_CRAFT ** order
-    return res
-
-
-# Utility functions
-
-def create_argument_parser():
-    """Creates argparse commandline parser."""
-    parser = argparse.ArgumentParser(
-        description="Tells you how many basic Diablo 3 gems "
-                    "you need for an upgraded one")
-
-    parser.add_argument('target', type=str, help="Gem you want to make",
-                        metavar="TARGET")
-    parser.add_argument('--stock', '-s', type=str, action='append',
-                        help="Gems you have in stock for making TARGET")
-
-    return parser
-
-
 def parse_gem_cluster(gems):
     """Parses the string or list representation of 'gem cluster'
     into a dictionary that maps gem classes into quantities.
@@ -105,6 +83,46 @@ def parse_gem_cluster(gems):
                 cluster[class_] = total + int(quantity)
 
     return cluster
+
+
+def to_basic_gems(cluster):
+    """Returns a number of basic gems needed for given gem cluster.
+    :param cluster: Gem cluster (a dict)
+    """
+    res = 0
+    for class_, quantity in cluster.iteritems():
+        order = next(i for i, (c, _) in enumerate(GEM_CLASSES) if c == class_)
+        res += quantity * GEMS_PER_CRAFT ** order
+    return res
+
+
+# Utility functions
+
+def create_argument_parser():
+    """Creates argparse commandline parser."""
+    parser = argparse.ArgumentParser(
+        description="Tells you how many basic Diablo 3 gems "
+                    "you need for an upgraded one",
+        epilog=os.linesep.join(["Possible gem classes include:",
+                                list_gem_classes()]),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+
+    parser.add_argument('target', type=str, help="Gem you want to make",
+                        metavar="TARGET")
+    parser.add_argument('--stock', '-s', type=str, action='append', default=[],
+                        help="Gems you have in stock for making TARGET. "
+                             "Specify them as comma-separated list, "
+                             "e.g. '1fst,27fsq'.")
+
+    return parser
+
+
+def list_gem_classes():
+    """Returns a list of gem class names and identifiers
+    that can be used in the command line argments for the script.
+    """
+    return os.linesep.join("\t%s:\t%s" % gs for gs in GEM_CLASSES)
 
 
 if __name__ == '__main__':
