@@ -66,7 +66,7 @@ def to_basic_gems(cluster):
     res = 0
     for class_, quantity in cluster.iteritems():
         order = next(i for i, (c, _) in enumerate(GEM_CLASSES) if c == class_)
-        res += quantity * (GEMS_PER_CRAFT ** order if order > 0 else 1)
+        res += quantity * GEMS_PER_CRAFT ** order
     return res
 
 
@@ -80,7 +80,7 @@ def create_argument_parser():
 
     parser.add_argument('target', type=str, help="Gem you want to make",
                         metavar="TARGET")
-    parser.add_argument('--stock', '-s', type=str, nargs='*',
+    parser.add_argument('--stock', '-s', type=str, action='append',
                         help="Gems you have in stock for making TARGET")
 
     return parser
