@@ -30,7 +30,7 @@ you will need for that::
     You DON'T have enough lesser gems to make 1 Flawless Star gem(s).
     The equivalent of 81 Flawless Square gem(s) is missing for that.
 
-You can also say gems what you already have in _stock_, so that you'll see how many
+You can also say gems what you already have in *stock*, so that you'll see how many
 you are still missing to perform your craft::
 
     $ d3gem 1fst -s 20fsq,1rsq,1st
