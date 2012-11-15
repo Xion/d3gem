@@ -39,7 +39,6 @@ def main():
         missing = target_basic - stock_basic
         print "You DON'T have enough lesser gems to make %s %s gem(s)." % (
             target_quantity, target_class_name)
-        print
         print "What is missing is the equivalent of:"
         print_gems(missing, verbose=args.verbose)
 
