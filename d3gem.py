@@ -162,16 +162,22 @@ def parse_gem_cluster(gems):
 
 def parse_gem_spec(gemspec):
     """Parse the string with single gem spec, i.e. text containing
-    the gem class symbol and quantity, in either order.
+    the gem class symbol and optional quantity, in either order.
     :return: Tuple (gem_class, quantity)
     """
-    class_first = re.match(r'(\w+)(\d+)', gemspec)
-    if class_first:
-        return class_first.groups()
+    def sanitize(class_, quantity):
+        if quantity is None:
+            quantity = 1
+        quantity = int(quantity)
+        return class_, quantity
 
-    count_first = re.match(r'(\d+)(\w+)', gemspec)
-    if count_first:
-        return tuple(reversed(count_first.groups()))
+    class_first = re.match(r'(?P<class_>\D+)(?P<quantity>\d+)?', gemspec)
+    if class_first:
+        return sanitize(**class_first.groupdict())
+
+    quantity_first = re.match(r'(?P<quantity>\d+)?(?P<class_>\D+)', gemspec)
+    if quantity_first:
+        return sanitize(**quantity_first.groupdict())
 
 
 def format_gem_clusters(gem_clusters, sep=" or "):
