@@ -33,27 +33,30 @@ def main():
         residue = stock_basic - target_basic
         print "You DO have enough lesser gems to make %s %s gem(s)." % (
             target_quantity, target_class_name)
-        print
         print "Afterwards, you will still have the equivalent of:"
-        print_gems(residue)
+        print_gems(residue, verbose=args.verbose)
     else:  # target_basic > stock_basic
         missing = target_basic - stock_basic
         print "You DON'T have enough lesser gems to make %s %s gem(s)." % (
             target_quantity, target_class_name)
         print
         print "What is missing is the equivalent of:"
-        print_gems(missing)
+        print_gems(missing, verbose=args.verbose)
 
 
-def print_gems(gems):
+def print_gems(gems, verbose=False):
     """Prints the quantity of gems in user-friendly format,
     using various representations with different 'best' gem classes
     for comparison.
     """
-    gem_clusters = to_various_representations(gems)
-    separator = " or "
-    print " " * len(separator) + format_gem_clusters(gem_clusters,
-                                                     sep=os.linesep + separator)
+    if verbose:
+        gem_clusters = to_various_representations(gems)
+        separator = " or "
+        print " " * len(separator) + format_gem_clusters(
+            gem_clusters, sep=os.linesep + separator)
+    else:
+        _, basic_class_name = GEM_CLASSES[0]
+        print "%s %s gem(s)" % (gems, basic_class_name)
 
 
 # Gem basics
@@ -67,7 +70,6 @@ GEM_CLASSES = [
     ('pst', "Perfect Star"),
     ('rst', "Radiant Star"),
 ]
-_, BASIC_CLASS_NAME = GEM_CLASSES[0]
 
 GEMS_PER_CRAFT = 3
 
@@ -191,6 +193,11 @@ def create_argument_parser():
                         help="Gems you have in stock for making TARGET. "
                              "Specify them as comma-separated list, "
                              "e.g. '1fst,27fsq'.")
+
+    parser.add_argument('--verbose', '-v', action='store_true', default=False,
+                        help="Output the missing or remaining gems "
+                             "conveniently converted to several equivalent "
+                             "representations.")
 
     return parser
 
