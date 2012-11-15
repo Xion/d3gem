@@ -33,21 +33,34 @@ def main():
         residue = stock_basic - target_basic
         print "You DO have enough lesser gems to make %s %s gem(s)." % (
             target_quantity, target_class_name)
-        print "Afterwards you will still have the equivalent of %s %s gem(s)." % (
-            residue, BASIC_CLASS_NAME)
+        print
+        print "Afterwards, you will still have the equivalent of:"
+        print_gems(residue)
     else:  # target_basic > stock_basic
         missing = target_basic - stock_basic
         print "You DON'T have enough lesser gems to make %s %s gem(s)." % (
             target_quantity, target_class_name)
-        print "The equivalent of %s %s gem(s) is missing for that." % (
-            missing, BASIC_CLASS_NAME)
+        print
+        print "What is missing is the equivalent of:"
+        print_gems(missing)
 
 
-# Gem logic
+def print_gems(gems):
+    """Prints the quantity of gems in user-friendly format,
+    using various representations with different 'best' gem classes
+    for comparison.
+    """
+    gem_clusters = to_various_representations(gems)
+    separator = " or "
+    print " " * len(separator) + format_gem_clusters(gem_clusters,
+                                                     sep=os.linesep + separator)
+
+
+# Gem basics
 
 GEM_CLASSES = [
     ('fsq', "Flawless Square"),
-    ('psq', "Perfest Square"),
+    ('psq', "Perfect Square"),
     ('rsq', "Radiant Square"),
     ('st', "Star"),
     ('fst', "Flawless Star"),
@@ -63,6 +76,67 @@ def gem_class_name(ident):
     """Gets the name of gem class given its identifier."""
     return next(name for class_, name in GEM_CLASSES if class_ == ident)
 
+
+def gem_class_order(ident):
+    """Gets the order (index) of gem class given its identifier.
+    Basic gems are of class 0.
+    """
+    return next(i for i, (c, _) in enumerate(GEM_CLASSES) if c == ident)
+
+
+# Gem arithmetic
+
+def to_basic_gems(cluster):
+    """Returns a number of basic gems needed for given gem cluster.
+    :param cluster: Gem cluster (a dict)
+    """
+    return sum(quantity * GEMS_PER_CRAFT ** gem_class_order(class_)
+               for class_, quantity in cluster.iteritems())
+
+
+def to_best_possible_gems(gems, best=None):
+    """Returns a gem cluster with best possible gems for given ones.
+    :param gems: Gem cluster (a dict) or number of basic gems (an int)
+    :param best: What gem class is considered best
+    """
+    if not isinstance(gems, (int, long)):
+        gems = to_basic_gems(gems)
+
+    best = best or len(GEM_CLASSES) - 1
+    if not isinstance(best, (int, long)):
+        best = gem_class_order(best)
+
+    cluster = {}
+    for order in reversed(xrange(best + 1)):
+        count = GEMS_PER_CRAFT ** order
+        if gems >= count:
+            class_, _ = GEM_CLASSES[order]
+            cluster[class_] = gems / count
+            gems %= count
+
+    return cluster
+
+
+def to_various_representations(gems):
+    """Returns a list of various gem clusters equivalent to given one.
+
+    The clusters returned differ in what they consider the 'best' gem,
+    so that user can get a better idea of gem quantities.
+
+    :param gems: Gem cluster (a dict) or number of basic gems (an int)
+    """
+    res = []
+    for class_, _ in GEM_CLASSES:
+        cluster = to_best_possible_gems(gems, best=class_)
+        if cluster.get(class_, 0) == 0:
+            break
+        res.append(cluster)
+
+    res.reverse()
+    return res
+
+
+# Gem input/output
 
 def parse_gem_cluster(gems):
     """Parses the string or list representation of 'gem cluster'
@@ -85,15 +159,18 @@ def parse_gem_cluster(gems):
     return cluster
 
 
-def to_basic_gems(cluster):
-    """Returns a number of basic gems needed for given gem cluster.
-    :param cluster: Gem cluster (a dict)
+def format_gem_clusters(gem_clusters, sep=" or "):
+    """Formats a list of equivalent gem clusters in to several lines
+    of user-friendly text.
     """
-    res = 0
-    for class_, quantity in cluster.iteritems():
-        order = next(i for i, (c, _) in enumerate(GEM_CLASSES) if c == class_)
-        res += quantity * GEMS_PER_CRAFT ** order
-    return res
+    return sep.join(map(format_gem_cluster, gem_clusters))
+
+
+def format_gem_cluster(gems):
+    """Formats a gem cluster as a single line of user-friendly text."""
+    return humanized_join("%s %s" % (gems[class_], name)
+                          for class_, name in reversed(GEM_CLASSES)
+                          if class_ in gems) + " gem(s)"
 
 
 # Utility functions
@@ -123,6 +200,16 @@ def list_gem_classes():
     that can be used in the command line argments for the script.
     """
     return os.linesep.join("\t%s:\t%s" % gs for gs in GEM_CLASSES)
+
+
+def humanized_join(iterable, sep=", ", last_sep=" and "):
+    """Joins given iterable in a 'humanized' way, i.e. with different separator
+    between last and second-to-last element (typicaly ' and ').
+    """
+    seq = list(iterable)
+    if len(seq) == 1:
+        return str(seq[0])
+    return sep.join(seq[:-1]) + last_sep + seq[-1]
 
 
 if __name__ == '__main__':

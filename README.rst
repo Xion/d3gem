@@ -49,7 +49,6 @@ Type ``d3gem --help`` to get the list of gem class abbrevations.
 TODOs
 -----
 
-* Show missing/excess gems converted to better classes than just Flawless Squares
 * Make target gems optional and show what's the highest gem you can craft with given stock
   and how many more you need for even higher class
 * Maybe store stock in config file?...
