@@ -152,13 +152,27 @@ def parse_gem_cluster(gems):
     for s in gems:
         gemspecs = [gs.strip() for gs in s.split(',')]  # ex. 1pst,6fsq
         for gs in gemspecs:
-            m = re.match(r'(\d+)(\w+)', gs)
-            if m:
-                quantity, class_ = m.groups()
+            parsed = parse_gem_spec(gs)
+            if parsed:
+                class_, quantity = parsed
                 total = cluster.setdefault(class_, 0)
                 cluster[class_] = total + int(quantity)
 
     return cluster
+
+
+def parse_gem_spec(gemspec):
+    """Parse the string with single gem spec, i.e. text containing
+    the gem class symbol and quantity, in either order.
+    :return: Tuple (gem_class, quantity)
+    """
+    class_first = re.match(r'(\w+)(\d+)', gemspec)
+    if class_first:
+        return class_first.groups()
+
+    count_first = re.match(r'(\d+)(\w+)', gemspec)
+    if count_first:
+        return tuple(reversed(count_first.groups()))
 
 
 def format_gem_clusters(gem_clusters, sep=" or "):
