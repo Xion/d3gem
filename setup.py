@@ -7,7 +7,7 @@ from setuptools import setup
 
 setup(
     name="d3gem",
-    version="0.1",
+    version="0.2",
     description="Diablo 3 gem crafting helper",
     long_description=open('README.rst').read(),
     url='https://github.com/Xion/d3gem',
