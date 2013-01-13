@@ -7,20 +7,20 @@ from setuptools import setup
 
 setup(
     name="d3gem",
-    version="0.2",
+    version="0.2.1",
     description="Diablo 3 gem crafting helper",
     long_description=open('README.rst').read(),
     url='https://github.com/Xion/d3gem',
     author='Karol Kuczmarski "Xion"',
     author_email='karol.kuczmarski@gmail.com',
-    license="MIT",
+    license="GPLv3",
 
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
         'Intended Audience :: End Users/Desktop',
         'Intended Audience :: Other Audience',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python',

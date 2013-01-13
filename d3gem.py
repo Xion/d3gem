@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 """
 d3gem -- For helping with Diablo 3 gem madness
+
 :author: Karol Kuczmarski "Xion"
+:license: GNU General Public License Version 3 (see LICENSE file)
 """
 import os
 import re
