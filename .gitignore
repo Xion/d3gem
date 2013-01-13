@@ -9,3 +9,4 @@ develop-eggs
 pip-log.txt
 
 *.ropeproject
+*.sublime-*
