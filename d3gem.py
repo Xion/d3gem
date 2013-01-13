@@ -68,6 +68,7 @@ GEM_CLASSES = [
     ('fst', "Flawless Star"),
     ('pst', "Perfect Star"),
     ('rst', "Radiant Star"),
+    ('mq', "Marquise"),
 ]
 
 GEMS_PER_CRAFT = 3
@@ -149,7 +150,7 @@ def parse_gem_cluster(gems):
 
     cluster = {}
     for s in gems:
-        gemspecs = [gs.strip() for gs in s.split(',')]  # ex. 1pst,6fsq
+        gemspecs = (gs.strip() for gs in s.split(','))  # ex. 1pst,6fsq
         for gs in gemspecs:
             parsed = parse_gem_spec(gs)
             if parsed:
