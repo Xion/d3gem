@@ -5,9 +5,16 @@ d3gem -- For helping with Diablo 3 gem madness
 :author: Karol Kuczmarski "Xion"
 :license: GNU General Public License Version 3 (see LICENSE file)
 """
+__version__ = "0.2.1"
+__description__ = "Diablo 3 gem crafting helper"
+__author__ = 'Karol Kuczmarski "Xion"'
+__license__ = "GPLv3"
+
+
+import argparse
+import numbers
 import os
 import re
-import argparse
 
 
 def main():
@@ -103,7 +110,7 @@ def to_best_possible_gems(gems, best=None):
     :param gems: Gem cluster (a dict) or number of basic gems (an int)
     :param best: What gem class is considered best
     """
-    if not isinstance(gems, (int, long)):
+    if not isinstance(gems, numbers.Integral):
         gems = to_basic_gems(gems)
 
     best = best or len(GEM_CLASSES) - 1
