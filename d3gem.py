@@ -15,6 +15,15 @@ import argparse
 import numbers
 import os
 import re
+import sys
+
+
+# Python 2/3 compatibility shims
+IS_PY3 = sys.version_info[0] == 3
+if IS_PY3:
+    String = (str,)
+else:
+    String = (str, unicode)
 
 
 def main():
@@ -27,8 +36,8 @@ def main():
     if len(target) > 1:
         print "Sorry, you can only specify one class of target gems."
         exit(1)
-    target_class_name = gem_class_name(next(target.iterkeys()))
-    target_quantity = next(target.itervalues())
+    target_class_id, target_quantity = target.popitem()
+    target_class_name = gem_class_name(target_class_id)
 
     stock = parse_gem_cluster(args.stock)
 
@@ -102,7 +111,7 @@ def to_basic_gems(cluster):
     :param cluster: Gem cluster (a dict)
     """
     return sum(quantity * GEMS_PER_CRAFT ** gem_class_order(class_)
-               for class_, quantity in cluster.iteritems())
+               for class_, quantity in cluster.items())
 
 
 def to_best_possible_gems(gems, best=None):
@@ -114,11 +123,11 @@ def to_best_possible_gems(gems, best=None):
         gems = to_basic_gems(gems)
 
     best = best or len(GEM_CLASSES) - 1
-    if not isinstance(best, (int, long)):
+    if not isinstance(best, numbers.Integral):
         best = gem_class_order(best)
 
     cluster = {}
-    for order in reversed(xrange(best + 1)):
+    for order in reversed(range(best + 1)):
         count = GEMS_PER_CRAFT ** order
         if gems >= count:
             class_, _ = GEM_CLASSES[order]
@@ -154,7 +163,7 @@ def parse_gem_cluster(gems):
     into a dictionary that maps gem classes into quantities.
     :param gems: Comma-separated string or list thereof
     """
-    if isinstance(gems, basestring):
+    if isinstance(gems, String):
         gems = [gems]
 
     cluster = {}
